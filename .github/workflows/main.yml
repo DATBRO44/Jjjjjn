@@ -1,0 +1,22 @@
+name: Deploy to VPS
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Install sshpass
+        run: sudo apt-get install -y sshpass
+
+      - name: Deploy via SSH
+        env:
+          SECRET: ${{ secrets.SECRET }}
+        run: sshpass -p 'segfault' ssh -o 'SetEnv SECRET=$SECRET' root@lulz.segfault.net 'echo "Deployment successful!"'
+        
