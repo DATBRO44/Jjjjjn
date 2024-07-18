@@ -1,0 +1,25 @@
+name: Kali SSH and VNC Setup
+
+on: push
+
+jobs:
+  setup:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Install sshpass
+      run: sudo apt-get update && sudo apt-get install -y sshpass
+
+    - name: SSH into the server and start VNC
+      run: |
+        sshpass -p 'segfault' ssh -o 'SetEnv SECRET=MlFnzoxHXeRljeqWInCsVTzW' root@lulz.segfault.net 'startxvnc'
+
+    - name: SSH port forwarding and start ngrok
+      run: |
+        sshpass -p 'segfault' ssh -L5900:0:5900 -o 'SetEnv SECRET=MlFnzoxHXeRljeqWInCsVTzW' root@lulz.segfault.net << 'EOF'
+        ngrok tcp 5900
+        EOF
+        
